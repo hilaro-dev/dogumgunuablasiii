@@ -919,125 +919,210 @@ function closeLetterModal() {
 
 /* ==========================================================================
    4. WALKING PIXEL-ART CHIBI AVATARS IN THE MEADOW (ELİF & ZEYNEP)
+   Stardew Valley / GBA RPG-inspired 24x24 Chibi Pixel Sprites
    ========================================================================== */
 
 const PALETTE = {
-  H: "#231614",
-  h: "#3b2622",
-  G: "#14131a",
-  g: "#59607a",
-  S: "#fcd6b8",
-  E: "#241717",
-  B: "#f3959b",
-  M: "#c85b64",
-  R: "#8b1e3f",
-  r: "#6b132e",
-  L: "#16141a",
-  K: "#f2c65e",
-  P: "#262530",
-  p: "#1d1c25",
-  F: "#15141a",
-  T: "#4e3528",
-  t: "#3a261b",
-  N: "#eaf2ff"
+  O: "#3a2420", // Warm dark-brown pixel outline (softer than harsh pure black)
+  H: "#4a2d25", // Fluffy dark brown wavy hair
+  h: "#744c3d", // Lighter brown hair highlight pixels
+  G: "#2c2836", // Cute dark sunglasses lens
+  g: "#8e96b3", // Sunglasses subtle lens glint
+  S: "#fde0c6", // Soft warm skin
+  W: "#ffffff", // 1px white eye-shine highlight
+  B: "#f598aa", // Soft rosy pink cheek blush
+  M: "#c86872", // Tiny sweet smile
+  R: "#962445", // Elif's cozy burgundy/deep red long-sleeve top
+  r: "#751833", // Burgundy top shade
+  D: "#2a2328", // Dark belt
+  K: "#f7ca59", // Tiny gold belt-buckle pixel
+  T: "#634333", // Zeynep's cozy relaxed dark brown t-shirt
+  t: "#4d3225", // Dark brown t-shirt shade
+  N: "#eaf3fc", // Tiny 1-2px light silver necklace pixel detail
+  P: "#393746", // Dark pants
+  p: "#2a2835", // Dark pants shade (back foot)
+  F: "#46312d"  // Little dark shoes
 };
 
-// ELİF SPRITE (16x20): Shoulder-length wavy dark hair, sunglasses on head, burgundy long-sleeve top, belt buckle, dark pants
-const ELIF_BASE_TOP = [
-  "....HHHHHHHH....",
-  "...HHhHHHHhHH...",
-  "..HGgGGHHGGgGH..",
-  "..HGGGGHHGGGGH..",
-  "..HHHHHSSHHHHH..",
-  "..HHhSSSSSShHH..",
-  ".HHSSSSSSSSSSHH.",
-  ".HhSSEBSSBESShH.",
-  ".HHSSSSSSSSSSHH.",
-  ".HhHSSSMMSSSHhH.",
-  "..HHhHSSSShHHH..",
-  "..H.RRRRRRRR.H..",
-  "....rRRRRRRr....",
-  "...RRRRRRRRRR...",
-  "...RRrRRRRrRR...",
-  "...SSRrRRrRSS...",
-  "....LLLKKLLL...."
+// ELİF UNIFIED UPPER BODY (24x19): Sleek flat-top wavy dark brown hair, sunglasses on head,
+// locked face + neck + burgundy long-sleeve top + stubby arms + gold belt buckle + upper pants
+const ELIF_UPPER = [
+  "........................",
+  "........................",
+  ".......OOOOOOOOOO.......",
+  ".....OOHGgGOOGgGHOO.....",
+  "....OOHHhhHHHHhhHHOO....",
+  "....OHHhHSSSSSSHhHHO....",
+  "....OHHHSSSSSSSSHHHO....",
+  "....OHHSSSSSSSSSSHHO....",
+  "....OHHSSSSSSSSSSHHO....",
+  "....OHHSSSSSSSSSSHHO....",
+  "....OHHSBSSMMSSBSHHO....",
+  "....OHHOSSSSSSSSOHHO....",
+  "...OHHHOOOSSSSOOOHHHO...",
+  "...OHHOORRRRRRRROOHHO...",
+  "....OHOORrRRRRrROOHO....",
+  ".....OORRrRRRRrRROO.....",
+  ".....OOSOrRRRRrOSOO.....",
+  "......OODDDKKDDDOO......",
+  ".......OPPPPPPPPO......."
 ];
 
-const ELIF_LEGS = {
+// ZEYNEP UNIFIED UPPER BODY (24x19): Sleek flat-top wavy dark brown hair,
+// locked face + neck + relaxed dark brown t-shirt + tiny silver necklace (NN) + stubby arms + upper pants
+const ZEYNEP_UPPER = [
+  "........................",
+  "........................",
+  ".......OOOOOOOOOO.......",
+  ".....OOHHHhhHHHHHOO.....",
+  "....OOHHhhHHHHhhHHOO....",
+  "....OHHhHSSSSSSHhHHO....",
+  "....OHHHSSSSSSSSHHHO....",
+  "....OHHSSSSSSSSSSHHO....",
+  "....OHHSSSSSSSSSSHHO....",
+  "....OHHSSSSSSSSSSHHO....",
+  "....OHHSBSSMMSSBSHHO....",
+  "....OHHOSSSSSSSSOHHO....",
+  "...OHHHOOOSSSSOOOHHHO...",
+  "...OHHOOTTTNNTTTOOHHO...",
+  "....OHOOTtTTTTtTOOHO....",
+  ".....OOSTtTTTTtTSOO.....",
+  ".....OOSOtTTTTtOSOO.....",
+  "......OOTtTTTTtTOO......",
+  ".......OPPPPPPPPO......."
+];
+
+// CHIBI LEGS & LITTLE SHOES (24x5, starts at y=18 so top row overlaps waist seamlessly during bounce!)
+const CHIBI_LEGS = {
   idle: [
-    "....PPP..PPP....",
-    "....PPP..PPP....",
-    "....FFF..FFF...."
+    ".......OPPPPPPPPO.......",
+    ".......OPPO..OPPO.......",
+    ".......OPPO..OPPO.......",
+    ".......OFFO..OFFO.......",
+    "........OO....OO........"
   ],
   walk1: [
-    "....PPP..pp.....",
-    "...PPP....pp....",
-    "...FFF....FF...."
+    ".......OPPPPPPPPO.......",
+    "......OPPO....OPPO......",
+    "......OFFO....OPpO......",
+    ".......OO......OO.......",
+    "........................"
   ],
   walk2: [
-    ".....pp..PPP....",
-    "....pp....PPP...",
-    "....FF....FFF..."
+    ".......OPPPPPPPPO.......",
+    "......OPPO....OPPO......",
+    "......OPpO....OFFO......",
+    ".......OO......OO.......",
+    "........................"
+  ],
+  jump: [
+    ".......OPPPPPPPPO.......",
+    "......OPPO....OPPO......",
+    "......OFFO....OFFO......",
+    ".......OO......OO.......",
+    "........................"
   ]
 };
 
-// ZEYNEP SPRITE (16x20): Shoulder-length wavy dark hair, relaxed dark brown t-shirt, tiny silver necklace (NN), dark pants
-const ZEYNEP_BASE_TOP = [
-  "....HHHHHHHH....",
-  "...HHhHHHHhHH...",
-  "..HHHHHHHHHHHH..",
-  "..HHhHHHHHHhHH..",
-  "..HHHHHSSHHHHH..",
-  "..HHhSSSSSShHH..",
-  ".HHSSSSSSSSSSHH.",
-  ".HhSSEBSSBESShH.",
-  ".HHSSSSSSSSSSHH.",
-  ".HhHSSSMMSSSHhH.",
-  "..HHhHSSSShHHH..",
-  "..H.TTTNNTTT.H..",
-  "....tTTNNTTt....",
-  "...TTTTTTTTTT...",
-  "...SS.TTTT.SS...",
-  "...SS.tTTt.SS...",
-  "....PPPPPPPP...."
-];
-
-const ZEYNEP_LEGS = {
-  idle: [
-    "....PPP..PPP....",
-    "....PPP..PPP....",
-    "....FFF..FFF...."
-  ],
-  walk1: [
-    "....PPP..pp.....",
-    "...PPP....pp....",
-    "...FFF....FF...."
-  ],
-  walk2: [
-    ".....pp..PPP....",
-    "....pp....PPP...",
-    "....FF....FFF..."
-  ]
-};
-
-function drawPixelSprite(canvas, topRows, legRows) {
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const rows = [...topRows, ...legRows];
-  const scale = 2; // 16x20 -> 32x40 canvas
-
+function drawPixelRows(ctx, rows, offsetY, scale) {
   for (let y = 0; y < rows.length; y++) {
     const row = rows[y];
+    const drawY = y + offsetY;
+    if (drawY < 0 || drawY >= 24) continue;
     for (let x = 0; x < row.length; x++) {
       const ch = row[x];
       if (ch !== "." && PALETTE[ch]) {
         ctx.fillStyle = PALETTE[ch];
-        ctx.fillRect(x * scale, y * scale, scale, scale);
+        ctx.fillRect(x * scale, drawY * scale, scale, scale);
       }
     }
   }
+}
+
+function drawChibiEyes(ctx, expression, bounceY, scale) {
+  const eyeTopY = 8 + bounceY;
+  const eyeBotY = 9 + bounceY;
+
+  const px = (x, y, color) => {
+    ctx.fillStyle = color;
+    ctx.fillRect(x * scale, y * scale, scale, scale);
+  };
+
+  if (expression === "blink") {
+    // Soft closed eyes
+    px(8, eyeBotY, PALETTE.O);
+    px(9, eyeBotY, PALETTE.O);
+    px(14, eyeBotY, PALETTE.O);
+    px(15, eyeBotY, PALETTE.O);
+  } else if (expression === "happy") {
+    // Happy squinting arcs (^ ^)
+    px(9, eyeTopY, PALETTE.O);
+    px(8, eyeBotY, PALETTE.O);
+    px(10, eyeBotY, PALETTE.O);
+
+    px(14, eyeTopY, PALETTE.O);
+    px(13, eyeBotY, PALETTE.O);
+    px(15, eyeBotY, PALETTE.O);
+  } else {
+    // Big cute dark eyes with 1px white eye-shine highlight
+    px(8, eyeTopY, PALETTE.W);
+    px(9, eyeTopY, PALETTE.O);
+    px(8, eyeBotY, PALETTE.O);
+    px(9, eyeBotY, PALETTE.O);
+
+    px(14, eyeTopY, PALETTE.W);
+    px(15, eyeTopY, PALETTE.O);
+    px(14, eyeBotY, PALETTE.O);
+    px(15, eyeBotY, PALETTE.O);
+  }
+}
+
+function renderChibiAvatar(av) {
+  if (!av.canvas) return;
+  const ctx = av.canvas.getContext("2d");
+  ctx.clearRect(0, 0, av.canvas.width, av.canvas.height);
+
+  const scale = 2; // 24x24 pixel grid -> 48x48 crisp canvas
+
+  // Determine unified bounce & leg pose (head + neck + torso stay 100% locked together!)
+  let legPose = "idle";
+  let bounceY = 0;
+
+  if (av.isJumping) {
+    legPose = "jump";
+    bounceY = -1;
+  } else if (av.state === "walk") {
+    // 4-step bouncy walk cycle: entire unified upper body bounces smoothly together while legs alternate
+    if (av.walkStep === 0) {
+      legPose = "walk1";
+      bounceY = -1;
+    } else if (av.walkStep === 1) {
+      legPose = "idle";
+      bounceY = 0;
+    } else if (av.walkStep === 2) {
+      legPose = "walk2";
+      bounceY = -1;
+    } else {
+      legPose = "idle";
+      bounceY = 0;
+    }
+  } else {
+    // Subtle 1px idle breathing bounce (whole upper body moves together, zero neck gap!)
+    legPose = "idle";
+    bounceY = av.idleBreath ? -1 : 0;
+  }
+
+  let expression = "open";
+  if (av.happyTimer > 0) {
+    expression = "happy";
+  } else if (av.isBlinking) {
+    expression = "blink";
+  }
+
+  // Draw legs first (starting at y=18 with overlap row), then the locked unified upper body + eyes
+  drawPixelRows(ctx, CHIBI_LEGS[legPose], 18, scale);
+  drawPixelRows(ctx, av.upperRows, bounceY, scale);
+  drawChibiEyes(ctx, expression, bounceY, scale);
 }
 
 const avatars = {
@@ -1046,15 +1131,21 @@ const avatars = {
     wrapper: document.getElementById("avatar-elif"),
     canvas: document.getElementById("canvas-elif"),
     bubble: document.getElementById("bubble-elif"),
-    topRows: ELIF_BASE_TOP,
-    legs: ELIF_LEGS,
+    upperRows: ELIF_UPPER,
     x: 0.36,
     targetX: 0.45,
     facing: 1,
     state: "idle",
-    frame: 0,
+    walkStep: 0,
     frameTimer: 0,
     waitTimer: 40,
+    breathTimer: 0,
+    idleBreath: false,
+    blinkCooldown: 180 + Math.floor(Math.random() * 140),
+    blinkDuration: 0,
+    isBlinking: false,
+    happyTimer: 0,
+    isJumping: false,
     bubbleTimeout: null
   },
   zeynep: {
@@ -1062,15 +1153,21 @@ const avatars = {
     wrapper: document.getElementById("avatar-zeynep"),
     canvas: document.getElementById("canvas-zeynep"),
     bubble: document.getElementById("bubble-zeynep"),
-    topRows: ZEYNEP_BASE_TOP,
-    legs: ZEYNEP_LEGS,
+    upperRows: ZEYNEP_UPPER,
     x: 0.62,
     targetX: 0.54,
     facing: -1,
     state: "idle",
-    frame: 0,
+    walkStep: 0,
     frameTimer: 0,
     waitTimer: 60,
+    breathTimer: 35,
+    idleBreath: false,
+    blinkCooldown: 220 + Math.floor(Math.random() * 140),
+    blinkDuration: 0,
+    isBlinking: false,
+    happyTimer: 0,
+    isJumping: false,
     bubbleTimeout: null
   }
 };
@@ -1078,8 +1175,8 @@ const avatars = {
 let dialogueCooldown = 140;
 
 function initAvatars() {
-  drawPixelSprite(avatars.elif.canvas, avatars.elif.topRows, avatars.elif.legs.idle);
-  drawPixelSprite(avatars.zeynep.canvas, avatars.zeynep.topRows, avatars.zeynep.legs.idle);
+  renderChibiAvatar(avatars.elif);
+  renderChibiAvatar(avatars.zeynep);
 
   updateAvatarDOMPosition(avatars.elif);
   updateAvatarDOMPosition(avatars.zeynep);
@@ -1116,7 +1213,7 @@ function initAvatars() {
 
 function updateAvatarDOMPosition(av) {
   const stageWidth = dom.avatarStage.clientWidth || window.innerWidth;
-  const avatarWidth = 76;
+  const avatarWidth = 82;
   const minPx = 18;
   const maxPx = Math.max(minPx + 40, stageWidth - avatarWidth - 18);
   const pixelX = minPx + av.x * (maxPx - minPx);
@@ -1149,40 +1246,83 @@ function showSpeechBubble(av, text, duration = 3400) {
   }, duration);
 }
 
+function getPastelPixelHeartSVG(fillColor, highlightColor) {
+  return `
+    <svg viewBox="0 0 9 8" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+      <rect x="1" y="0" width="2" height="1" fill="#3a2420"/>
+      <rect x="6" y="0" width="2" height="1" fill="#3a2420"/>
+      <rect x="0" y="1" width="1" height="3" fill="#3a2420"/>
+      <rect x="3" y="1" width="1" height="1" fill="#3a2420"/>
+      <rect x="5" y="1" width="1" height="1" fill="#3a2420"/>
+      <rect x="8" y="1" width="1" height="3" fill="#3a2420"/>
+      <rect x="4" y="2" width="1" height="1" fill="#3a2420"/>
+      <rect x="1" y="4" width="1" height="1" fill="#3a2420"/>
+      <rect x="7" y="4" width="1" height="1" fill="#3a2420"/>
+      <rect x="2" y="5" width="1" height="1" fill="#3a2420"/>
+      <rect x="6" y="5" width="1" height="1" fill="#3a2420"/>
+      <rect x="3" y="6" width="1" height="1" fill="#3a2420"/>
+      <rect x="5" y="6" width="1" height="1" fill="#3a2420"/>
+      <rect x="4" y="7" width="1" height="1" fill="#3a2420"/>
+      <rect x="1" y="1" width="2" height="3" fill="${fillColor}"/>
+      <rect x="6" y="1" width="2" height="3" fill="${fillColor}"/>
+      <rect x="3" y="2" width="1" height="3" fill="${fillColor}"/>
+      <rect x="5" y="2" width="1" height="3" fill="${fillColor}"/>
+      <rect x="4" y="3" width="1" height="4" fill="${fillColor}"/>
+      <rect x="2" y="4" width="5" height="1" fill="${fillColor}"/>
+      <rect x="3" y="5" width="3" height="1" fill="${fillColor}"/>
+      <rect x="1" y="1" width="1" height="1" fill="${highlightColor}"/>
+    </svg>
+  `;
+}
+
 function makeAvatarJumpAndSparkle(av) {
+  av.isJumping = true;
+  av.happyTimer = 52; // ~850ms of happy ^ ^ squinting eyes
+  renderChibiAvatar(av);
+
   av.wrapper.classList.remove("is-jumping");
   void av.wrapper.offsetWidth;
   av.wrapper.classList.add("is-jumping");
 
   setTimeout(() => {
     av.wrapper.classList.remove("is-jumping");
-  }, 560);
+    av.isJumping = false;
+    renderChibiAvatar(av);
+  }, 620);
 
-  // Emit tiny floating pixel hearts & sparkles
-  spawnAvatarParticles(av, ["💖", "✨", "🌸", "💕"]);
+  // Float 3 tiny pastel pixel hearts above their head
+  spawnPastelPixelHearts(av, 3);
 }
 
-function spawnAvatarParticles(av, symbols) {
+function spawnPastelPixelHearts(av, count = 3) {
   const stageWidth = dom.avatarStage.clientWidth || window.innerWidth;
-  const avatarWidth = 76;
+  const avatarWidth = 82;
   const minPx = 18;
   const maxPx = Math.max(minPx + 40, stageWidth - avatarWidth - 18);
   const centerX = minPx + av.x * (maxPx - minPx) + avatarWidth / 2;
 
-  for (let i = 0; i < 4; i++) {
+  const heartPalettes = [
+    { fill: "#ff99b8", hi: "#ffe0ea" }, // pastel rose pink
+    { fill: "#ffb7a5", hi: "#ffe8e0" }, // soft peach
+    { fill: "#ffd97d", hi: "#fff6d6" }  // warm pastel gold
+  ];
+
+  for (let i = 0; i < count; i++) {
     const p = document.createElement("span");
     p.className = "pixel-particle";
-    p.textContent = symbols[i % symbols.length];
-    const offsetX = (Math.random() - 0.5) * 44;
-    const driftX = (Math.random() - 0.5) * 34;
+    const pal = heartPalettes[i % heartPalettes.length];
+    p.innerHTML = getPastelPixelHeartSVG(pal.fill, pal.hi);
+    const offsetX = (i - 1) * 18 + (Math.random() - 0.5) * 8;
+    const driftX = (i - 1) * 14 + (Math.random() - 0.5) * 10;
     p.style.left = `${centerX + offsetX}px`;
-    p.style.bottom = `${72 + i * 7}px`;
+    p.style.bottom = `${74 + i * 6}px`;
     p.style.setProperty("--dx", `${driftX.toFixed(1)}px`);
+    p.style.animationDelay = `${i * 0.08}s`;
     dom.avatarParticles.appendChild(p);
 
     setTimeout(() => {
       p.remove();
-    }, 1200);
+    }, 1250);
   }
 }
 
@@ -1227,8 +1367,8 @@ function triggerAvatarConversation() {
   avatars.elif.waitTimer = 210;
   avatars.zeynep.waitTimer = 210;
 
-  drawPixelSprite(avatars.elif.canvas, avatars.elif.topRows, avatars.elif.legs.idle);
-  drawPixelSprite(avatars.zeynep.canvas, avatars.zeynep.topRows, avatars.zeynep.legs.idle);
+  renderChibiAvatar(avatars.elif);
+  renderChibiAvatar(avatars.zeynep);
   updateAvatarDOMPosition(avatars.elif);
   updateAvatarDOMPosition(avatars.zeynep);
 
@@ -1247,35 +1387,79 @@ function avatarGameLoop() {
   }
 
   Object.values(avatars).forEach((av) => {
+    let needsRedraw = false;
+
+    // 1) Happy squinting expression countdown
+    if (av.happyTimer > 0) {
+      av.happyTimer--;
+      if (av.happyTimer === 0) {
+        needsRedraw = true;
+      }
+    }
+
+    // 2) Periodic natural blinking every 3-5 seconds (180-300 frames at 60fps)
+    if (av.happyTimer === 0) {
+      if (av.isBlinking) {
+        av.blinkDuration--;
+        if (av.blinkDuration <= 0) {
+          av.isBlinking = false;
+          av.blinkCooldown = 180 + Math.floor(Math.random() * 120);
+          needsRedraw = true;
+        }
+      } else {
+        av.blinkCooldown--;
+        if (av.blinkCooldown <= 0) {
+          av.isBlinking = true;
+          av.blinkDuration = 9; // ~150ms blink
+          needsRedraw = true;
+        }
+      }
+    }
+
+    // 3) Autonomous idle breathing vs bouncy walking state
     if (av.state === "idle") {
+      av.breathTimer++;
+      if (av.breathTimer >= 42) {
+        av.breathTimer = 0;
+        av.idleBreath = !av.idleBreath;
+        needsRedraw = true;
+      }
+
       av.waitTimer--;
       if (av.waitTimer <= 0) {
         av.targetX = 0.08 + Math.random() * 0.84;
         av.state = "walk";
+        av.idleBreath = false;
+        needsRedraw = true;
       }
     } else if (av.state === "walk") {
       const diff = av.targetX - av.x;
-      const speed = 0.0016;
+      const speed = 0.0015;
 
       if (Math.abs(diff) <= speed * 1.5) {
         av.x = av.targetX;
         av.state = "idle";
-        av.waitTimer = 110 + Math.floor(Math.random() * 140);
-        drawPixelSprite(av.canvas, av.topRows, av.legs.idle);
+        av.waitTimer = 115 + Math.floor(Math.random() * 145);
+        av.breathTimer = 0;
+        av.idleBreath = false;
+        needsRedraw = true;
       } else {
         av.facing = diff > 0 ? 1 : -1;
         av.x += Math.sign(diff) * speed;
 
-        // 2-frame walking animation
+        // 4-phase bouncy walk cycle (head/hair gently bobs 1px up & down)
         av.frameTimer++;
-        if (av.frameTimer >= 12) {
+        if (av.frameTimer >= 9) {
           av.frameTimer = 0;
-          av.frame = av.frame === 0 ? 1 : 0;
-          const legFrame = av.frame === 0 ? av.legs.walk1 : av.legs.walk2;
-          drawPixelSprite(av.canvas, av.topRows, legFrame);
+          av.walkStep = (av.walkStep + 1) % 4;
+          needsRedraw = true;
         }
       }
       updateAvatarDOMPosition(av);
+    }
+
+    if (needsRedraw) {
+      renderChibiAvatar(av);
     }
   });
 

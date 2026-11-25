@@ -986,19 +986,32 @@ body {
 
 .pixel-particle {
   position: absolute;
-  font-size: 1rem;
+  width: 16px;
+  height: 16px;
   pointer-events: none;
+  image-rendering: pixelated;
   animation: floatUpParticle 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.pixel-particle svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 2px 3px rgba(58, 36, 32, 0.18));
 }
 
 @keyframes floatUpParticle {
   0% {
-    opacity: 1;
-    transform: translate(-50%, 0) scale(0.7);
+    opacity: 0;
+    transform: translate(-50%, 4px) scale(0.5);
   }
-  50% {
+  20% {
     opacity: 1;
-    transform: translate(calc(-50% + var(--dx, 8px)), -28px) scale(1.15);
+    transform: translate(calc(-50% + var(--dx, 6px) * 0.3), -10px) scale(1.15);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--dx, 10px) * 0.8), -34px) scale(1.05);
   }
   100% {
     opacity: 0;
@@ -1010,7 +1023,7 @@ body {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 76px;
+  width: 82px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1030,43 +1043,69 @@ body {
 }
 
 .avatar-wrapper:hover .avatar-character {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 .avatar-wrapper.is-jumping .avatar-canvas {
-  animation: avatarJump 0.52s cubic-bezier(0.28, 0.84, 0.42, 1);
+  animation: avatarJump 0.62s cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+.avatar-wrapper.is-jumping .avatar-shadow {
+  animation: shadowJump 0.62s cubic-bezier(0.28, 0.84, 0.42, 1);
 }
 
 @keyframes avatarJump {
   0% {
-    transform: translateY(0) scaleX(var(--facing, 1));
+    transform: translateY(0) scaleX(calc(var(--facing, 1) * 1)) scaleY(1);
   }
-  35% {
-    transform: translateY(-24px) scaleX(var(--facing, 1)) scaleY(1.05);
+  15% {
+    transform: translateY(2px) scaleX(calc(var(--facing, 1) * 1.14)) scaleY(0.84);
   }
-  65% {
-    transform: translateY(-20px) scaleX(var(--facing, 1));
+  42% {
+    transform: translateY(-24px) scaleX(calc(var(--facing, 1) * 0.91)) scaleY(1.1);
+  }
+  68% {
+    transform: translateY(-16px) scaleX(calc(var(--facing, 1) * 0.97)) scaleY(1.03);
+  }
+  86% {
+    transform: translateY(2px) scaleX(calc(var(--facing, 1) * 1.1)) scaleY(0.89);
   }
   100% {
-    transform: translateY(0) scaleX(var(--facing, 1));
+    transform: translateY(0) scaleX(calc(var(--facing, 1) * 1)) scaleY(1);
+  }
+}
+
+@keyframes shadowJump {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.36;
+  }
+  45% {
+    transform: scale(0.68);
+    opacity: 0.2;
   }
 }
 
 .avatar-canvas {
-  width: 68px;
-  height: 85px;
+  width: 78px;
+  height: 78px;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  transform-origin: bottom center;
   transform: scaleX(var(--facing, 1));
-  filter: drop-shadow(0 3px 4px rgba(34, 62, 20, 0.25));
+  filter: drop-shadow(0 2px 3px rgba(34, 62, 20, 0.16));
+  position: relative;
+  z-index: 2;
 }
 
 .avatar-shadow {
-  width: 42px;
-  height: 9px;
-  margin-top: -5px;
-  background: rgba(34, 64, 21, 0.35);
+  width: 46px;
+  height: 11px;
+  margin-top: -9px;
+  background: radial-gradient(ellipse at center, rgba(28, 66, 22, 0.38) 0%, rgba(28, 66, 22, 0.14) 68%, rgba(28, 66, 22, 0) 100%);
   border-radius: 50%;
+  position: relative;
+  z-index: 1;
 }
 
 .avatar-nametag {
@@ -1426,7 +1465,7 @@ body {
   }
 
   .avatar-canvas {
-    width: 52px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
   }
 }
