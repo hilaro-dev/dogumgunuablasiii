@@ -1,0 +1,1432 @@
+/* ==========================================================================
+   COZY BIRTHDAY WEBSITE FOR ELİF - STYLESHEET
+   ========================================================================== */
+
+:root {
+  /* Sky Sunset Palette */
+  --sky-top: #cdb9e6;
+  --sky-upper-mid: #e9bdd9;
+  --sky-lower-mid: #f9c4c2;
+  --sky-horizon: #ffe1b8;
+  --sky-glow: #fff2d6;
+
+  /* Meadow Palette */
+  --meadow-back: #78b159;
+  --meadow-mid: #5f9e47;
+  --meadow-front: #4a8736;
+  --meadow-dark: #386b27;
+
+  /* Polaroid & Paper */
+  --paper-front: #fffdf9;
+  --paper-back: #fcf5e8;
+  --paper-border: #efe4d2;
+  --ink-dark: #3e2b23;
+  --ink-muted: #7d6256;
+  --accent-burgundy: #8d2d46;
+  --accent-gold: #f5b942;
+  --accent-rose: #e37b8e;
+
+  /* Fonts */
+  --font-ui: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-hand: 'Caveat', cursive;
+  --font-pixel: 'Silkscreen', monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  color: var(--ink-dark);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Confetti Canvas */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ==========================================================================
+   1. SCENE & SKY ATMOSPHERE
+   ========================================================================== */
+
+.scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(
+    180deg,
+    var(--sky-top) 0%,
+    var(--sky-upper-mid) 28%,
+    var(--sky-lower-mid) 56%,
+    var(--sky-horizon) 78%,
+    var(--sky-glow) 100%
+  );
+  overflow: hidden;
+}
+
+/* Soft Golden-Hour Sun Glow near the horizon */
+.scene::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%);
+  width: min(750px, 110vw);
+  height: min(380px, 45vh);
+  background: radial-gradient(
+    circle,
+    rgba(255, 244, 204, 0.72) 0%,
+    rgba(255, 208, 168, 0.35) 45%,
+    rgba(255, 196, 180, 0) 75%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sky-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Subtle Twinkling Sky Stars */
+.stars-container {
+  position: absolute;
+  inset: 0 0 45% 0;
+}
+
+.sky-star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #fff9e6;
+  box-shadow: 0 0 6px #fff6d1;
+  opacity: 0.5;
+  animation: starTwinkle var(--twinkle-dur, 3.2s) ease-in-out infinite alternate;
+  animation-delay: var(--twinkle-delay, 0s);
+}
+
+@keyframes starTwinkle {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(1.25);
+  }
+}
+
+/* Pixel-Inspired Drifting Clouds */
+.clouds-container {
+  position: absolute;
+  inset: 0 0 24% 0;
+}
+
+.pixel-cloud {
+  position: absolute;
+  top: var(--cloud-top, 12%);
+  left: -220px;
+  width: var(--cloud-width, 150px);
+  height: auto;
+  opacity: var(--cloud-opacity, 0.85);
+  image-rendering: pixelated;
+  filter: drop-shadow(0 6px 10px rgba(173, 112, 138, 0.14));
+  animation: driftCloud var(--cloud-speed, 65s) linear infinite;
+  animation-delay: var(--cloud-delay, 0s);
+}
+
+@keyframes driftCloud {
+  0% {
+    transform: translateX(-240px);
+  }
+  100% {
+    transform: translateX(calc(100vw + 280px));
+  }
+}
+
+/* ==========================================================================
+   2. TOP HUD & PROGRESS PILL
+   ========================================================================== */
+
+.hud-bar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 22px 4px;
+  flex-shrink: 0;
+}
+
+.title-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 252, 246, 0.78);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 14px rgba(139, 86, 105, 0.12);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.96rem;
+  color: #5b3440;
+}
+
+.sparkle-icon {
+  font-size: 1.05rem;
+}
+
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 250, 240, 0.88);
+  backdrop-filter: blur(8px);
+  border: 2px solid #f3d6c1;
+  box-shadow: 0 4px 12px rgba(122, 74, 62, 0.14);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-family: var(--font-pixel);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: #6b3b3e;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.progress-pill.bump {
+  transform: scale(1.12);
+  background: #fff6d9;
+  border-color: var(--accent-gold);
+}
+
+.progress-pill.completed {
+  background: linear-gradient(135deg, #fff6d6, #ffe3ea);
+  border-color: #f0b44c;
+  color: #7c283e;
+}
+
+/* Celebratory Floating Button for Birthday Letter */
+.letter-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, #ff7e9d, #f5b041);
+  color: #fff;
+  border: 2px solid #fff7e6;
+  box-shadow: 0 6px 18px rgba(227, 102, 131, 0.38);
+  padding: 7px 15px;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  animation: pulseFloatingBtn 2s ease-in-out infinite;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.letter-pill-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 22px rgba(227, 102, 131, 0.5);
+}
+
+.letter-pill-btn.hidden {
+  display: none;
+}
+
+@keyframes pulseFloatingBtn {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.04);
+  }
+}
+
+/* ==========================================================================
+   3. FAIRY LIGHTS ROPE & 20-POLAROID CAROUSEL SECTION
+   ========================================================================== */
+
+.carousel-section {
+  position: relative;
+  z-index: 15;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-height: 68vh;
+  padding: 0 12px;
+}
+
+/* Draped Rope & Glowing Fairy Lights spanning across upper-middle area */
+.rope-backdrop {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 100%;
+  height: 75px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.rope-svg {
+  width: 100%;
+  height: 75px;
+  display: block;
+}
+
+.fairy-lights-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 75px;
+}
+
+.fairy-bulb {
+  position: absolute;
+  width: 10px;
+  height: 13px;
+  border-radius: 50% 50% 55% 55%;
+  background: #fff7c2;
+  box-shadow:
+    0 0 8px 3px rgba(255, 224, 112, 0.85),
+    0 0 18px 6px rgba(255, 189, 89, 0.45);
+  transform: translate(-50%, -2px);
+  animation: bulbTwinkle var(--bulb-dur, 2.2s) ease-in-out infinite alternate;
+  animation-delay: var(--bulb-delay, 0s);
+}
+
+.fairy-bulb::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 4px;
+  background: #6c4632;
+  border-radius: 1px;
+}
+
+@keyframes bulbTwinkle {
+  0% {
+    opacity: 0.65;
+    background: #ffe699;
+    box-shadow:
+      0 0 6px 2px rgba(255, 211, 92, 0.6),
+      0 0 12px 3px rgba(255, 175, 64, 0.25);
+    transform: translate(-50%, -2px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    background: #fffdf0;
+    box-shadow:
+      0 0 11px 4px rgba(255, 232, 128, 0.95),
+      0 0 22px 8px rgba(255, 196, 82, 0.58);
+    transform: translate(-50%, -2px) scale(1.08);
+  }
+}
+
+/* Carousel Track (3 cards side-by-side on desktop/landscape, 1 on mobile portrait) */
+.polaroid-track {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: flex-start;
+  width: min(1120px, 90vw);
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 26px 8px 14px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  outline: none;
+  cursor: grab;
+}
+
+.polaroid-track.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+
+.polaroid-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Individual Slot in the Carousel Track */
+.polaroid-slot {
+  /* Desktop & Landscape: 3 cards comfortably visible at once */
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 14px;
+  position: relative;
+}
+
+/* Continuous Draped Rope Segment spanning across every card in the scrollable gallery */
+.slot-rope-svg {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  width: 100%;
+  height: 26px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+
+/* Small fairy lights attached right along each card's draped rope segment */
+.slot-fairy-light {
+  position: absolute;
+  top: 4px;
+  width: 9px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff9d2;
+  box-shadow:
+    0 0 8px 3px rgba(255, 224, 112, 0.85),
+    0 0 16px 5px rgba(255, 189, 89, 0.45);
+  z-index: 2;
+  animation: bulbTwinkle var(--bulb-dur, 2.3s) ease-in-out infinite alternate;
+  animation-delay: var(--bulb-delay, 0.3s);
+}
+
+.slot-fairy-light::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 3px;
+  background: #6c4632;
+}
+
+.slot-fairy-light.light-left {
+  left: 18%;
+}
+
+.slot-fairy-light.light-mid {
+  left: 50%;
+  top: 8px;
+}
+
+.slot-fairy-light.light-right {
+  right: 18%;
+}
+
+/* Sway Container (Pivots around the top clothespin) */
+.polaroid-sway-wrapper {
+  position: relative;
+  z-index: 3;
+  transform-origin: 50% -8px;
+  animation: windSway var(--sway-duration, 5.2s) ease-in-out infinite alternate;
+  animation-delay: var(--sway-delay, 0s);
+  will-change: transform;
+}
+
+/* Pause sway when hovered or flipped */
+.polaroid-sway-wrapper:hover,
+.polaroid-sway-wrapper.is-flipped {
+  animation-play-state: paused;
+}
+
+@keyframes windSway {
+  0% {
+    transform: rotate(var(--sway-angle-left, -2.4deg));
+  }
+  100% {
+    transform: rotate(var(--sway-angle-right, 2.6deg));
+  }
+}
+
+/* Wooden Clothespin holding the Polaroid to the rope */
+.clothespin {
+  position: relative;
+  z-index: 10;
+  width: 14px;
+  height: 34px;
+  margin: -11px auto -10px;
+  background: linear-gradient(90deg, #d7a16e 0%, #c48853 55%, #a86f3e 100%);
+  border: 1.5px solid #7d4e27;
+  border-radius: 3px 3px 2px 2px;
+  box-shadow: 0 3px 6px rgba(60, 32, 18, 0.28);
+}
+
+/* Metal spring detail on the clothespin */
+.clothespin::before {
+  content: '';
+  position: absolute;
+  top: 13px;
+  left: -2px;
+  right: -2px;
+  height: 5px;
+  background: linear-gradient(180deg, #d9dfe4, #8c969e);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.clothespin::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 3px;
+  right: 3px;
+  height: 2px;
+  background: rgba(105, 62, 28, 0.45);
+}
+
+/* 3D Perspective Card Scene */
+.polaroid-card {
+  width: min(262px, 76vw);
+  height: min(330px, 47vh);
+  min-height: 255px;
+  perspective: 1100px;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+
+.polaroid-card:focus-visible .polaroid-inner {
+  box-shadow: 0 0 0 4px rgba(245, 185, 66, 0.75), 0 14px 28px rgba(77, 43, 35, 0.22);
+}
+
+.polaroid-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.72s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.3s ease;
+  border-radius: 6px;
+  box-shadow:
+    0 12px 26px rgba(84, 46, 40, 0.2),
+    0 3px 8px rgba(84, 46, 40, 0.12);
+}
+
+.polaroid-card:hover .polaroid-inner {
+  box-shadow:
+    0 16px 32px rgba(84, 46, 40, 0.26),
+    0 4px 10px rgba(84, 46, 40, 0.15);
+}
+
+.polaroid-sway-wrapper.is-flipped .polaroid-inner {
+  transform: rotateY(180deg);
+}
+
+/* Front & Back Faces */
+.polaroid-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* FRONT FACE */
+.polaroid-front {
+  background: var(--paper-front);
+  border: 1px solid var(--paper-border);
+  padding: 13px 13px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Opened / Read Seal on Front Corner */
+.opened-badge {
+  position: absolute;
+  top: 19px;
+  right: 19px;
+  z-index: 5;
+  background: rgba(255, 250, 238, 0.92);
+  border: 1.5px solid #f0c265;
+  color: #8f394c;
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  padding: 3px 7px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.polaroid-card.was-opened .opened-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Photo Frame Container */
+.photo-frame {
+  position: relative;
+  width: 100%;
+  flex: 1 1 auto;
+  background: #f5e6dc;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 0 8px rgba(74, 44, 34, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s ease;
+  pointer-events: none;
+}
+
+.polaroid-card:hover .photo-img {
+  transform: scale(1.03);
+}
+
+/* Cozy Fallback Pastel Artwork if images/1.jpg..20.jpg isn't placed yet */
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 14px;
+  background: var(--placeholder-bg, linear-gradient(135deg, #ffd6e0, #ffefca));
+  color: #5c3742;
+  position: relative;
+}
+
+.placeholder-illustration {
+  width: 78px;
+  height: 78px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 4px 8px rgba(110, 62, 74, 0.14));
+}
+
+.placeholder-label {
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #5c3341;
+}
+
+.placeholder-path {
+  margin-top: 4px;
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  color: rgba(92, 51, 65, 0.65);
+  background: rgba(255, 255, 255, 0.55);
+  padding: 2px 7px;
+  border-radius: 99px;
+}
+
+/* Front Polaroid Bottom Caption Area */
+.polaroid-caption-bar {
+  padding-top: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.polaroid-title {
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--ink-dark);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.polaroid-turn-icon {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  color: var(--accent-rose);
+  background: #fff0f3;
+  border: 1px solid #f7cdd6;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+/* BACK FACE (Warm Paper Texture + Handwritten Turkish Note) */
+.polaroid-back {
+  transform: rotateY(180deg);
+  background-color: var(--paper-back);
+  background-image:
+    radial-gradient(rgba(181, 141, 103, 0.08) 1px, transparent 0),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 27px,
+      rgba(210, 178, 148, 0.26) 27px,
+      rgba(210, 178, 148, 0.26) 28px
+    );
+  background-size: 16px 16px, 100% 28px;
+  border: 1px solid #e6d3ba;
+  padding: 18px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: inset 0 0 24px rgba(186, 142, 98, 0.16);
+}
+
+/* Decorative Washi Tape at top of the back side */
+.washi-tape {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  width: 78px;
+  height: 15px;
+  background: rgba(242, 162, 178, 0.45);
+  border-left: 2px dashed rgba(255, 255, 255, 0.7);
+  border-right: 2px dashed rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+}
+
+.back-header {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-bottom: 1.5px dashed rgba(163, 121, 94, 0.35);
+  padding-bottom: 6px;
+}
+
+.back-number {
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  color: var(--ink-muted);
+}
+
+.back-note-container {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 2px;
+  overflow-y: auto;
+}
+
+.back-note {
+  font-family: var(--font-hand);
+  font-size: 1.38rem;
+  font-weight: 600;
+  line-height: 1.28;
+  color: #3d2720;
+  text-align: center;
+  word-break: break-word;
+}
+
+.back-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 0.73rem;
+  color: var(--ink-muted);
+  border-top: 1px solid rgba(163, 121, 94, 0.2);
+  padding-top: 6px;
+}
+
+.back-flip-prompt {
+  color: var(--accent-burgundy);
+  font-weight: 700;
+}
+
+/* Carousel Left/Right Navigation Buttons (Desktop & Landscape) */
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-55%);
+  z-index: 20;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 251, 244, 0.88);
+  backdrop-filter: blur(6px);
+  border: 2px solid #f2d5be;
+  box-shadow: 0 6px 16px rgba(102, 59, 49, 0.18);
+  color: #6b3b3e;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.carousel-nav-btn:hover:not(:disabled) {
+  background: #fff;
+  transform: translateY(-55%) scale(1.08);
+}
+
+.carousel-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.prev-btn {
+  left: max(14px, calc(50% - 590px));
+}
+
+.next-btn {
+  right: max(14px, calc(50% - 590px));
+}
+
+/* Carousel Footer: Compact Pill Indicator (1 / 20) & Hints */
+.carousel-footer {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  z-index: 15;
+}
+
+.carousel-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.counter-pill {
+  font-family: var(--font-pixel);
+  font-size: 0.68rem;
+  color: #5b313a;
+  background: rgba(255, 250, 242, 0.88);
+  backdrop-filter: blur(6px);
+  border: 1.5px solid #edd0ba;
+  box-shadow: 0 3px 10px rgba(110, 62, 52, 0.12);
+  padding: 4px 13px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.interaction-hints {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.77rem;
+  font-weight: 700;
+  color: #6d434a;
+  background: rgba(255, 249, 240, 0.68);
+  padding: 3px 12px;
+  border-radius: 999px;
+}
+
+.swipe-hint {
+  display: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-burgundy);
+  background: rgba(255, 246, 238, 0.85);
+  border: 1px solid #f2cbd3;
+  padding: 3px 10px;
+  border-radius: 999px;
+  animation: nudgeRight 1.6s ease-in-out infinite;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.swipe-hint.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes nudgeRight {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+/* ==========================================================================
+   4. MEADOW (BOTTOM ~22% OF VIEWPORT) & WALKING PIXEL AVATARS (ELİF & ZEYNEP)
+   ========================================================================== */
+
+.meadow-section {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 22vh;
+  min-height: 138px;
+  max-height: 210px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+/* Layered Rolling Meadow Hills */
+.meadow-hill {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  border-radius: 50% 50% 0 0;
+  pointer-events: none;
+}
+
+.hill-back {
+  bottom: 0;
+  height: 105%;
+  background: linear-gradient(180deg, #87bf62 0%, var(--meadow-back) 100%);
+  transform: translateX(-4%) scaleY(0.95);
+  box-shadow: 0 -6px 24px rgba(255, 224, 178, 0.45);
+}
+
+.hill-mid {
+  bottom: 0;
+  height: 88%;
+  background: linear-gradient(180deg, #6ead50 0%, var(--meadow-mid) 55%, var(--meadow-front) 100%);
+  transform: translateX(3%);
+}
+
+/* Pixel Grass Tufts & Swaying Wildflowers */
+.meadow-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.grass-tuft {
+  position: absolute;
+  width: 14px;
+  height: 10px;
+  image-rendering: pixelated;
+  opacity: 0.9;
+}
+
+.wildflower {
+  position: absolute;
+  width: 14px;
+  height: 18px;
+  transform-origin: bottom center;
+  animation: flowerSway var(--flower-dur, 3.4s) ease-in-out infinite alternate;
+  animation-delay: var(--flower-delay, 0s);
+  image-rendering: pixelated;
+}
+
+@keyframes flowerSway {
+  0% {
+    transform: rotate(-7deg);
+  }
+  100% {
+    transform: rotate(7deg);
+  }
+}
+
+/* Walking Pixel-Art Avatars Stage */
+.avatar-stage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  height: 110px;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.avatar-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 12;
+}
+
+.pixel-particle {
+  position: absolute;
+  font-size: 1rem;
+  pointer-events: none;
+  animation: floatUpParticle 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes floatUpParticle {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--dx, 8px)), -28px) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx, 12px)), -52px) scale(0.85);
+  }
+}
+
+.avatar-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  cursor: pointer;
+  outline: none;
+  will-change: transform;
+  user-select: none;
+}
+
+.avatar-character {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.15s ease;
+}
+
+.avatar-wrapper:hover .avatar-character {
+  transform: scale(1.06);
+}
+
+.avatar-wrapper.is-jumping .avatar-canvas {
+  animation: avatarJump 0.52s cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+@keyframes avatarJump {
+  0% {
+    transform: translateY(0) scaleX(var(--facing, 1));
+  }
+  35% {
+    transform: translateY(-24px) scaleX(var(--facing, 1)) scaleY(1.05);
+  }
+  65% {
+    transform: translateY(-20px) scaleX(var(--facing, 1));
+  }
+  100% {
+    transform: translateY(0) scaleX(var(--facing, 1));
+  }
+}
+
+.avatar-canvas {
+  width: 68px;
+  height: 85px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  transform: scaleX(var(--facing, 1));
+  filter: drop-shadow(0 3px 4px rgba(34, 62, 20, 0.25));
+}
+
+.avatar-shadow {
+  width: 42px;
+  height: 9px;
+  margin-top: -5px;
+  background: rgba(34, 64, 21, 0.35);
+  border-radius: 50%;
+}
+
+.avatar-nametag {
+  margin-top: 2px;
+  font-family: var(--font-pixel);
+  font-size: 0.56rem;
+  color: #fffef7;
+  background: rgba(46, 82, 31, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2px 7px;
+  border-radius: 99px;
+  letter-spacing: 0.03em;
+}
+
+/* Pixel-Styled Speech Bubble */
+.speech-bubble {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fffef9;
+  color: #3d2429;
+  border: 2.5px solid #4a2d33;
+  box-shadow:
+    3px 3px 0 rgba(74, 45, 51, 0.25),
+    0 6px 14px rgba(0, 0, 0, 0.12);
+  padding: 6px 11px;
+  border-radius: 8px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  z-index: 30;
+  pointer-events: none;
+  animation: popBubble 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #4a2d33 transparent transparent transparent;
+}
+
+.speech-bubble.hidden {
+  display: none;
+}
+
+@keyframes popBubble {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* Foreground Grass Strip & Subtle Hint */
+.meadow-foreground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22px;
+  background: linear-gradient(180deg, rgba(61, 117, 41, 0) 0%, var(--meadow-dark) 100%);
+  z-index: 8;
+  pointer-events: none;
+}
+
+.meadow-hint {
+  position: absolute;
+  right: 16px;
+  bottom: 5px;
+  z-index: 9;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255, 252, 238, 0.85);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   5. FINAL DOĞUM GÜNÜ MEKTUBU MODAL
+   ========================================================================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(54, 28, 39, 0.56);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  animation: fadeInBackdrop 0.3s ease;
+}
+
+.modal-backdrop.hidden {
+  display: none;
+}
+
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.letter-paper {
+  position: relative;
+  width: min(560px, 94vw);
+  max-height: 88vh;
+  overflow-y: auto;
+  background-color: #fffaf0;
+  background-image:
+    radial-gradient(rgba(189, 146, 108, 0.08) 1px, transparent 0),
+    linear-gradient(180deg, rgba(255, 237, 213, 0.45) 0%, rgba(255, 250, 240, 0) 100px);
+  background-size: 18px 18px, 100% 100%;
+  border: 2px solid #ecd3b4;
+  border-radius: 16px;
+  padding: 28px 26px 24px;
+  box-shadow:
+    0 24px 48px rgba(48, 20, 29, 0.35),
+    inset 0 0 32px rgba(217, 171, 126, 0.18);
+  text-align: center;
+  animation: popModalPaper 0.42s cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+@keyframes popModalPaper {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid #e4c7a8;
+  background: #fff6e8;
+  color: #6b3b3e;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: #ffe8cc;
+  transform: scale(1.08);
+}
+
+.letter-wax-seal {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #e86f88, #a32c48);
+  border: 3px solid #fbd799;
+  box-shadow: 0 4px 12px rgba(163, 44, 72, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.65rem;
+}
+
+.letter-badge {
+  display: inline-block;
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  color: var(--accent-burgundy);
+  background: #ffe9ee;
+  border: 1px solid #f5c2cd;
+  padding: 4px 10px;
+  border-radius: 99px;
+  margin-bottom: 8px;
+}
+
+.letter-title {
+  font-family: var(--font-hand);
+  font-size: 2.35rem;
+  color: #542834;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+
+.letter-body {
+  font-family: var(--font-hand);
+  font-size: 1.48rem;
+  line-height: 1.38;
+  color: #3f2822;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px dashed #dfc3a3;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+
+.letter-body p + p {
+  margin-top: 10px;
+}
+
+.letter-signature {
+  font-family: var(--font-hand);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent-burgundy);
+  text-align: right;
+  padding-right: 8px;
+  margin-bottom: 18px;
+}
+
+.letter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.confetti-replay-btn {
+  background: linear-gradient(135deg, #e85d7e, #f2a93b);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(232, 93, 126, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.confetti-replay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 18px rgba(232, 93, 126, 0.45);
+}
+
+.letter-secondary-btn {
+  background: #fff5e4;
+  color: #5e3832;
+  border: 1.5px solid #dfc19e;
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.letter-secondary-btn:hover {
+  background: #fae8cb;
+}
+
+/* ==========================================================================
+   6. RESPONSIVE LAYOUT: MOBILE PORTRAIT & COMPACT SCREENS
+   ========================================================================== */
+
+/* Mobile Portrait (max-width: 768px and portrait) -> 1 Centered Polaroid per view */
+@media (max-width: 768px) and (orientation: portrait), (max-width: 640px) {
+  .hud-bar {
+    padding: 10px 12px 2px;
+  }
+
+  .title-chip {
+    font-size: 0.84rem;
+    padding: 6px 11px;
+  }
+
+  .progress-pill {
+    font-size: 0.64rem;
+    padding: 6px 10px;
+  }
+
+  .letter-pill-btn {
+    font-size: 0.78rem;
+    padding: 6px 11px;
+  }
+
+  .polaroid-track {
+    width: 100vw;
+    padding: 24px 0 10px;
+  }
+
+  /* 1 Polaroid centered cleanly per view */
+  .polaroid-slot {
+    flex: 0 0 100%;
+    max-width: 100%;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    padding: 0 24px;
+  }
+
+  .polaroid-card {
+    width: min(268px, 78vw);
+    height: min(345px, 46vh);
+  }
+
+  /* Hide desktop side arrows on mobile portrait and show "Kaydır →" swipe hint */
+  .carousel-nav-btn {
+    display: none;
+  }
+
+  .swipe-hint {
+    display: inline-block;
+  }
+
+  .meadow-hint {
+    font-size: 0.64rem;
+    right: 10px;
+  }
+}
+
+/* Short Landscape Viewports (e.g. mobile landscape) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hud-bar {
+    padding: 6px 16px 0;
+  }
+
+  .polaroid-card {
+    width: min(195px, 26vw);
+    height: min(215px, 50vh);
+    min-height: 185px;
+  }
+
+  .polaroid-title {
+    font-size: 1.15rem;
+  }
+
+  .back-note {
+    font-size: 1.1rem;
+  }
+
+  .meadow-section {
+    height: 20vh;
+    min-height: 95px;
+  }
+
+  .avatar-canvas {
+    width: 52px;
+    height: 65px;
+  }
+}

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>İyi ki Doğdun Elif! ✨</title>
+
+  <!-- Google Fonts with full Turkish (latin-ext) support -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Quicksand:wght@500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Confetti Canvas Overlay -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Main Sky & Scene Container -->
+  <div class="scene" id="scene">
+
+    <!-- Sky Background Elements: Twinkling Stars & Pixel Clouds -->
+    <div class="sky-layer" aria-hidden="true">
+      <div class="stars-container" id="stars-container"></div>
+      <div class="clouds-container" id="clouds-container"></div>
+    </div>
+
+    <!-- Top HUD Bar -->
+    <header class="hud-bar">
+      <div class="title-chip">
+        <span class="sparkle-icon">✨</span>
+        <span id="site-title">İyi ki Doğdun Elif!</span>
+      </div>
+
+      <div class="hud-right">
+        <!-- Surprise Letter Floating Button (Unlocked when all memories opened) -->
+        <button id="open-letter-btn" class="letter-pill-btn hidden" type="button" aria-label="Final Doğum Günü Mektubunu Aç">
+          <span class="envelope-icon">💌</span>
+          <span>Doğum Günü Mektubu</span>
+        </button>
+
+        <!-- Progress Pill Badge (Dynamically initialized from CONFIG.photos.length) -->
+        <div class="progress-pill" id="progress-pill" role="status" aria-live="polite">
+          <span class="progress-heart" id="progress-icon">🌸</span>
+          <span id="progress-text">0 / 20 Anı Açıldı</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Upper-Middle Fairy Light Rope & Polaroid Carousel Section -->
+    <main class="carousel-section" aria-label="Doğum Günü Anıları">
+      <!-- Continuous Background Rope & Fairy Lights behind the Polaroids -->
+      <div class="rope-backdrop" aria-hidden="true">
+        <svg class="rope-svg" viewBox="0 0 1440 90" preserveAspectRatio="none">
+          <path class="rope-shadow" d="M-20,28 Q360,54 720,34 T1460,28" fill="none" stroke="rgba(75, 42, 28, 0.22)" stroke-width="5" />
+          <path class="rope-line" d="M-20,24 Q360,50 720,30 T1460,24" fill="none" stroke="#8c5a3c" stroke-width="3.5" stroke-dasharray="6 2" />
+        </svg>
+        <div class="fairy-lights-row" id="fairy-lights-row"></div>
+      </div>
+
+      <!-- Desktop/Landscape Left Navigation Arrow -->
+      <button class="carousel-nav-btn prev-btn" id="prev-btn" type="button" aria-label="Önceki Anılar">
+        <span aria-hidden="true">‹</span>
+      </button>
+
+      <!-- Horizontal Scroll-Snap Track for 20 Polaroids -->
+      <div class="polaroid-track" id="polaroid-track" tabindex="0" aria-label="Fotoğraf Kartları">
+        <!-- 20 Cards are injected dynamically from CONFIG.photos in script.js -->
+      </div>
+
+      <!-- Desktop/Landscape Right Navigation Arrow -->
+      <button class="carousel-nav-btn next-btn" id="next-btn" type="button" aria-label="Sonraki Anılar">
+        <span aria-hidden="true">›</span>
+      </button>
+
+      <!-- Carousel Footer: Compact Counter Pill (e.g. 1 / 20) & Hints -->
+      <div class="carousel-footer">
+        <div class="carousel-status-row">
+          <div class="counter-pill" id="counter-pill" aria-live="polite">1 / 20</div>
+          <span class="swipe-hint" id="swipe-hint">Kaydır →</span>
+        </div>
+        <div class="interaction-hints">
+          <span class="flip-hint">Kartı çevirmek için dokun ↻</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Meadow (Bottom ~22% of viewport) with Layered Hills, Wildflowers & Pixel Avatars -->
+    <section class="meadow-section" id="meadow-section" aria-label="Çayır ve Karakterler">
+      <!-- Distant and Mid Meadow Hills -->
+      <div class="meadow-hill hill-back" aria-hidden="true"></div>
+      <div class="meadow-hill hill-mid" aria-hidden="true"></div>
+
+      <!-- Wildflowers & Pixel Grass Tufts Container -->
+      <div class="meadow-decor" id="meadow-decor" aria-hidden="true"></div>
+
+      <!-- Walking Pixel-Art Avatars Stage (Elif & Zeynep) -->
+      <div class="avatar-stage" id="avatar-stage">
+        <!-- Floating Pixel Hearts/Sparkles Particle Layer -->
+        <div class="avatar-particles" id="avatar-particles" aria-hidden="true"></div>
+
+        <!-- Elif Avatar (Older Sister) -->
+        <div class="avatar-wrapper" id="avatar-elif" role="button" tabindex="0" aria-label="Elif karakteri - zıplatmak için tıkla">
+          <div class="speech-bubble hidden" id="bubble-elif"></div>
+          <div class="avatar-character" id="char-elif">
+            <canvas class="avatar-canvas" id="canvas-elif" width="32" height="40"></canvas>
+            <div class="avatar-shadow"></div>
+          </div>
+          <span class="avatar-nametag" id="nametag-elif">Elif</span>
+        </div>
+
+        <!-- Zeynep Avatar (Me / Younger Sister) -->
+        <div class="avatar-wrapper" id="avatar-zeynep" role="button" tabindex="0" aria-label="Zeynep karakteri - zıplatmak için tıkla">
+          <div class="speech-bubble hidden" id="bubble-zeynep"></div>
+          <div class="avatar-character" id="char-zeynep">
+            <canvas class="avatar-canvas" id="canvas-zeynep" width="32" height="40"></canvas>
+            <div class="avatar-shadow"></div>
+          </div>
+          <span class="avatar-nametag" id="nametag-zeynep">Zeynep</span>
+        </div>
+      </div>
+
+      <!-- Foreground Pixel Grass Strip -->
+      <div class="meadow-foreground" id="meadow-foreground" aria-hidden="true"></div>
+      <div class="meadow-hint" aria-hidden="true">Elif ve Zeynep'e dokunabilirsin ✨</div>
+    </section>
+  </div>
+
+  <!-- Final Doğum Günü Mektubu Modal -->
+  <div class="modal-backdrop hidden" id="letter-modal" role="dialog" aria-modal="true" aria-labelledby="letter-modal-title">
+    <div class="letter-paper">
+      <button class="modal-close-btn" id="close-letter-btn" type="button" aria-label="Mektubu Kapat">✕</button>
+
+      <div class="letter-wax-seal" aria-hidden="true">🎂</div>
+      <p class="letter-badge" id="letter-badge">20 / 20 Anı Tamamlandı • Sürpriz Açıldı!</p>
+      <h2 class="letter-title" id="letter-modal-title">Final Doğum Günü Mektubu</h2>
+
+      <div class="letter-body" id="letter-body">
+        <!-- Populated from CONFIG.finalLetter in script.js -->
+      </div>
+
+      <div class="letter-signature" id="letter-signature"></div>
+
+      <div class="letter-actions">
+        <button class="confetti-replay-btn" id="replay-confetti-btn" type="button">
+          🎉 Konfetileri Tekrar Patlat
+        </button>
+        <button class="letter-secondary-btn" id="keep-exploring-btn" type="button">
+          Anılara Dön
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
